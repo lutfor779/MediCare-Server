@@ -152,6 +152,25 @@ async function run() {
             res.json(result);
         });
 
+        // change order status
+        app.put('/orders', async (req, res) => {
+            const data = req.body;
+            const filter = { _id: ObjectId(data.id) };
+            const updateDoc = { $set: { status: data.status } };
+            const result = await ordersCollection.updateOne(filter, updateDoc);
+            console.log('Order status successfully changed');
+            res.json(result);
+        });
+
+        // delete order api
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+            console.log('Order deleted');
+            res.json(result);
+        });
+
         // delete appointments api
         app.delete('/appointments/:id', async (req, res) => {
             const id = req.params.id;
