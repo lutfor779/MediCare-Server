@@ -304,7 +304,7 @@ async function run() {
         app.put('/special-users', async (req, res) => {
             const data = req.body;
             const filter = { _id: ObjectId(data.id) };
-            const updateDoc = { $set: { status: data.status } };
+            const updateDoc = { $set: { specialUser: data.specialUser } };
             const result = await specialUsersCollection.updateOne(
                 filter,
                 updateDoc
