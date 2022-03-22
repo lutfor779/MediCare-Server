@@ -27,6 +27,7 @@ async function run() {
         const serviceCollection = database.collection('services');
         const reviewCollection = database.collection('reviews');
         const appointmentsCollection = database.collection('appointments');
+        const ordersCollection = database.collection('orders');
 
         // get doctors api
         app.get('/doctors', async (req, res) => {
@@ -125,7 +126,32 @@ async function run() {
             res.json(result);
         });
 
-        // delete review api
+        // get orders api
+        app.get('/orders', async (req, res) => {
+            const email = req?.query?.email;
+            if (email) {
+                const query = { email };
+                const cursor = ordersCollection.find(query);
+                const orders = await cursor.toArray();
+                console.log('single user order found');
+                res.json(orders);
+            } else {
+                const cursor = ordersCollection.find({});
+                const orders = await cursor.toArray();
+                console.log('orders found');
+                res.json(orders);
+            }
+        });
+
+        // save order api
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            console.log('order done');
+            res.json(result);
+        });
+
+        // delete appointments api
         app.delete('/appointments/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
