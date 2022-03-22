@@ -163,7 +163,7 @@ async function run() {
         });
 
         // delete order api
-        app.delete('/order/:id', async (req, res) => {
+        app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await ordersCollection.deleteOne(query);
@@ -298,6 +298,19 @@ async function run() {
             const users = await cursor.toArray();
             console.log('Special users found');
             res.send(users);
+        });
+
+        // change special-users status
+        app.put('/special-users', async (req, res) => {
+            const data = req.body;
+            const filter = { _id: ObjectId(data.id) };
+            const updateDoc = { $set: { status: data.status } };
+            const result = await specialUsersCollection.updateOne(
+                filter,
+                updateDoc
+            );
+            console.log('Special-users status successfully changed');
+            res.json(result);
         });
 
         console.log('database connection ok');
