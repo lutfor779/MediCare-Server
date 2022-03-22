@@ -28,6 +28,7 @@ async function run() {
         const reviewCollection = database.collection('reviews');
         const appointmentsCollection = database.collection('appointments');
         const ordersCollection = database.collection('orders');
+        const specialUsersCollection = database.collection('special-users');
 
         // get doctors api
         app.get('/doctors', async (req, res) => {
@@ -255,6 +256,29 @@ async function run() {
             const result = await reviewCollection.deleteOne(query);
             console.log('Review deleted');
             res.json(result);
+        });
+
+        // save special user api
+        app.put('/special-users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await specialUsersCollection.updateOne(
+                filter,
+                updateDoc,
+                options
+            );
+            console.log('update special user data');
+            res.json(result);
+        });
+
+        // get special user api
+        app.get('/special-users', async (req, res) => {
+            const cursor = specialUsersCollection.find({});
+            const users = await cursor.toArray();
+            console.log('Special users found');
+            res.send(users);
         });
 
         console.log('database connection ok');
