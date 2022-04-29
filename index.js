@@ -325,5 +325,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Mobile server listening at :${port}`);
+    console.log(`This server listening at :${port}`);
 });
